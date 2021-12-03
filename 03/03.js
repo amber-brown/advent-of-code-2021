@@ -29,47 +29,35 @@ const answer1 = parseInt(gammaRate, 2) * parseInt(epsilonRate, 2)
 
 console.log(answer1)
 
-let array = inputArray.map(x => x.split(''))
+const getRating = ratingType => {
+    let array = inputArray.map(x => x.split(''))
 
-for (let i=0; i < 12; i++ ) {
-    const numberOfOnesInPosition = array.reduce((acc, curr) => {
-        return acc + parseInt(curr[i]) 
-    }, 0);
+    for (let i=0; i < 12; i++ ) {
+        const numberOfOnesInPosition = array.reduce((acc, curr) => {
+            return acc + parseInt(curr[i]) 
+        }, 0);
 
-    const mostCommonNumber = numberOfOnesInPosition * 2 >= array.length ? 1 : 0;
+        let numberToFilter;
 
-    array = array.filter(x => {
-        return parseInt(x[i]) === mostCommonNumber
-    }); 
+        if(ratingType === 'CO2Scrubber') {
+            numberToFilter = numberOfOnesInPosition * 2 >= array.length ? 1 : 0;
+        } else {
+            numberToFilter = numberOfOnesInPosition * 2 >= array.length ? 0 : 1;
+        }
 
-    if(array.length <= 1) {
-        break;
+        array = array.filter(x => {
+            return parseInt(x[i]) === numberToFilter
+        }); 
+
+        if(array.length <= 1) {
+            break;
+        }
     }
+
+    return array[0].join('')
 }
 
-const oxygenGenteratorRating = array[0].join('')
-
-let array2 = inputArray.map(x => x.split(''))
-
-for (let i=0; i < 12; i++ ) {
-    const numberOfOnesInPosition = array2.reduce((acc, curr) => {
-        return acc + parseInt(curr[i]) 
-    }, 0);
-
-    const mostCommonNumber = numberOfOnesInPosition * 2 >= array2.length ? 0 : 1;
-
-    array2 = array2.filter(x => {
-        return parseInt(x[i]) === mostCommonNumber
-    }); 
-
-    if(array2.length <= 1) {
-        break;
-    }
-}
-
-const CO2ScrubberRating = array2[0].join('')
-
-const answer2 = parseInt(CO2ScrubberRating, 2) * parseInt(oxygenGenteratorRating, 2)
+const answer2 = parseInt(getRating('CO2Scrubber'), 2) * parseInt(getRating('oxygenGenerator'), 2)
 
 console.log(answer2)
 
