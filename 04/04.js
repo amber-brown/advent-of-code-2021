@@ -21,31 +21,26 @@ let winningBoard
 // ]
 
 const boardIsWinner = board => {
-    const colMarkCount = new Array(5).fill(0)
-    const rowMarkCount = new Array(5).fill(0)
-
-    const boardMarkCounter = board.reduce((acc, row, rowIndex) => {
-        const [colMarkCount, rowMarkCount] = acc;
+    const [colMarkCount, rowMarkCount] = board.reduce((acc, row, rowIndex) => {
+        const [cCount, rCount] = acc
         row.map((number, numberIndex) => {
             if (number === 'x') {
-                colMarkCount[numberIndex]++
-                rowMarkCount[rowIndex]++
+                cCount[numberIndex]++
+                rCount[rowIndex]++
             }
         })
         return acc
-    }, [colMarkCount, rowMarkCount])
+    }, [new Array(5).fill(0), new Array(5).fill(0)])
 
-    if(boardMarkCounter[0].find(x => x === 5) || boardMarkCounter[1].find(x => x === 5)) {
+    if(colMarkCount.find(x => x === 5) || rowMarkCount.find(x => x === 5)) {
         return true
     }
     return false
 }
 
 const sumOfNumbersOnBoard = board => {
-    return board.reduce((acc, curr) => {
-        return acc + curr.reduce((a, c) => {
-            return c === 'x' ? a : c + a
-        }, 0)
+    return board.flat().reduce((acc, curr) => {
+        return curr === 'x' ? acc : curr + acc
     }, 0)
 }
 
