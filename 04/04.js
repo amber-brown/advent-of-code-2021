@@ -41,7 +41,7 @@ const sumOfNumbersOnBoard = board => {
     }, 0)
 }
 
-for (i=0; i < bingoBoardsInPlay.length; i++) {
+for (i=0; i < bingoInput.length; i++) {
     const numberCall = bingoInput[i]
 
     //loop over the boards until there is a winner,
