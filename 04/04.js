@@ -7,6 +7,7 @@ const bingoInput = bingoInputAndBoards[0].split(',').map(x => parseInt(x));
 bingoInputAndBoards.shift()
 const bingoBoards = bingoInputAndBoards.map(x => x.split('\n').map(x => x.split(' ').filter(x => x !== '').map(x => parseInt(x))));
 
+let bingoBoardsInPlay = bingoBoards
 let lastNumberCall
 let winningBoard
 
@@ -40,19 +41,27 @@ const boardIsWinner = board => {
     return false
 }
 
-for (i=0; i < bingoInput.length; i++) {
+const sumOfNumbersOnBoard = board => {
+    return board.reduce((acc, curr) => {
+        return acc + curr.reduce((a, c) => {
+            return c === 'x' ? a : c + a
+        }, 0)
+    }, 0)
+}
+
+for (i=0; i < bingoBoardsInPlay.length; i++) {
     const numberCall = bingoInput[i]
 
     //loop over the boards until there is a winner,
     //mark all of the numbers that match as 'x'
-    for (j=0; j < bingoBoards.length; j++) {
-        bingoBoards[j] = bingoBoards[j].map(row => row.map(n => {
+    for (j=0; j < bingoBoardsInPlay.length; j++) {
+        bingoBoardsInPlay[j] = bingoBoardsInPlay[j].map(row => row.map(n => {
             return n === numberCall ? 'x' : n
         }))
         
-        if(boardIsWinner(bingoBoards[j])) {
+        if(boardIsWinner(bingoBoardsInPlay[j])) {
             lastNumberCall = numberCall
-            winningBoard = bingoBoards[j]
+            winningBoard = bingoBoardsInPlay[j]
             break;
         }
     }
@@ -61,13 +70,30 @@ for (i=0; i < bingoInput.length; i++) {
     }
 }
 
-const sumOfUnmarkedNumbersOnWinningBoard = winningBoard.reduce((acc, curr) => {
-    return acc + curr.reduce((a, c) => {
-        return c === 'x' ? a : c + a
-    }, 0)
-}, 0)
-
-const answer1 = sumOfUnmarkedNumbersOnWinningBoard * lastNumberCall
+const answer1 = sumOfNumbersOnBoard(winningBoard) * lastNumberCall
 console.log(answer1)
 
+let bingoBoardsInPlay2 = bingoBoards
+let lastNumberCall2;
+let lastWinningBoard;
 
+for (i=0; i < bingoInput.length; i++) {
+    const numberCall = bingoInput[i]
+
+    for (j=0; j < bingoBoardsInPlay2.length; j++) {
+        bingoBoardsInPlay2[j] = bingoBoardsInPlay2[j].map(row => row.map(n => {
+            return n === numberCall ? 'x' : n
+        })) 
+    }
+
+    if(bingoBoardsInPlay2.length === 1 && boardIsWinner(bingoBoardsInPlay2[0])) {
+        lastWinningBoard = bingoBoardsInPlay2[0]
+        lastNumberCall2 = numberCall
+        break;
+    }
+
+    bingoBoardsInPlay2 = bingoBoardsInPlay2.filter(b => !boardIsWinner(b))
+}
+
+const answer2 = sumOfNumbersOnBoard(lastWinningBoard) * lastNumberCall2
+console.log(answer2)
