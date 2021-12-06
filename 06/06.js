@@ -8,7 +8,7 @@ const getFishCountAfterDays = (initialFish, days) => {
     initialFish.forEach((time) => daysUntilReproductionFishCount[time]++);
 
     for(let i = 0; i < days; i++) {
-        // remove all fish that reproduce from day 1 
+        // remove all fish that reproduce on current day 
         //(moves all other items into the new day position in the array)
         const fishThatReproducedCount = daysUntilReproductionFishCount.shift()
 
