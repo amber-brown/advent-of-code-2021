@@ -48,3 +48,37 @@ const nonCorruptLines = chunks.reduce((acc, line) => {
 }, [])
 
 console.log('Answer 1: ', syntaxErrorScore)
+
+const CHAR_POINTS = {
+    '(': 1,
+    '[': 2,
+    '{': 3,
+    '<': 4
+}
+
+const totalScoresOfLines = nonCorruptLines.reduce((acc, line) => {
+    const chunk = []
+
+    line.forEach(char => {
+        if(isOpeningChar(char)) {
+            chunk.push(char)
+        } else {            
+            chunk.pop()
+        }
+    })
+
+    // reached incomplete point, find score
+    const score = chunk.reverse().reduce((acc, curr) => {
+        return acc * 5 + CHAR_POINTS[curr]
+    }, 0)
+    
+    return [...acc, score]
+}, [])
+
+
+const middleValue = Math.floor(totalScoresOfLines.length / 2);
+totalScoresOfLines.sort((a, b) => a-b)
+
+const answer2 = totalScoresOfLines[middleValue]
+
+console.log('Answer 2: ', answer2)
